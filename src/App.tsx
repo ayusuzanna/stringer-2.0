@@ -89,7 +89,15 @@ export default function App() {
   const [showRateGuide, setShowRateGuide] = useState(false);
   const [showNewClaim, setShowNewClaim] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showReadmeModal, setShowReadmeModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const PUBLIC_PORTAL_URL = 'https://stringer.ai.studio';
+
+  const handleCopyPortalLink = () => {
+    navigator.clipboard.writeText(PUBLIC_PORTAL_URL);
+    showToast(`Pautan rasmi ${PUBLIC_PORTAL_URL} telah disalin untuk dikongsi kepada semua!`);
+  };
 
   // Firebase Auth State Listener & Super Admin Profile Seeding
   useEffect(() => {
@@ -401,10 +409,160 @@ export default function App() {
     showToast(`Folder tuntutan baharu ${newId} (${month}) berjaya dibuka.`);
   };
 
+  // Top Public URL & GitHub README Banner (visible on all screens)
+  const PublicAccessBanner = () => (
+    <div className="bg-[#001026] text-white px-4 py-2 border-b border-slate-800 text-xs">
+      <div className="max-w-[1520px] mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Akses Umum Semua Role
+          </span>
+          <span className="text-slate-300 text-[11px]">
+            Pautan Rasmi Portal &amp; GitHub README:
+          </span>
+          <a
+            href={PUBLIC_PORTAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono font-bold text-sky-300 hover:text-white underline text-xs"
+          >
+            {PUBLIC_PORTAL_URL}
+          </a>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleCopyPortalLink}
+            className="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white border border-white/20 text-[11px] font-semibold transition-colors cursor-pointer"
+          >
+            Salin Link
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowReadmeModal(true)}
+            className="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors cursor-pointer"
+          >
+            📄 Lihat README GitHub
+          </button>
+          <a
+            href={PUBLIC_PORTAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition-colors"
+          >
+            Buka Portal ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+
+  // GitHub README Modal
+  const ReadmeGitHubModal = () => {
+    const readmeSnippet = `# Stringer Claim Portal (Berita Harian / NSTP Media Prima)
+
+[![Portal Rasmi - stringer.ai.studio](https://img.shields.io/badge/🌐_Buka_Portal_Rasmi-https%3A%2F%2Fstringer.ai.studio-0B2545?style=for-the-badge)](https://stringer.ai.studio)
+[![Status Sistem](https://img.shields.io/badge/Status-Aktif_(Cloud_Firestore)-10B981?style=for-the-badge)](https://stringer.ai.studio)
+
+## 🌐 Pautan Akses Umum (Untuk Semua Orang Buka)
+👉 **URL Rasmi Portal:** **[https://stringer.ai.studio](https://stringer.ai.studio)**
+
+Klik pautan di atas untuk membuka **Stringer Claim Portal — Berita Harian (NSTP Media Prima)** secara terus dari pelayar web bagi semua peranan:
+- **Stringer (Wartawan Sambilan)**
+- **Ketua Jabatan (HOD)**
+- **Pegawai Sumber Manusia (HR & Kewangan)**
+
+### 🔐 Akses Penuh Semua Peranan (Super Admin)
+- \`ayusuzanna7k@gmail.com\` (Semua Role: Stringer, HOD, HR & Analitik)
+- \`ayusuzanna@mediaprima.com.my\` (Semua Role: Stringer, HOD, HR & Analitik)`;
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/60 p-4 flex items-center justify-center overflow-y-auto">
+        <div className="bg-white rounded-[8px] max-w-2xl w-full p-6 shadow-2xl border border-slate-300 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div>
+              <h2 className="text-base font-extrabold text-[#0B2545]">
+                📄 Fail README.md GitHub (Dikemaskini)
+              </h2>
+              <p className="text-xs text-slate-500">
+                Pautan rasmi https://stringer.ai.studio telah dimasukkan ke dalam fail /README.md untuk semua pengguna buka.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowReadmeModal(false)}
+              className="px-2.5 py-1 text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded"
+            >
+              ✕ Tutup
+            </button>
+          </div>
+
+          <div className="p-3.5 rounded-[6px] bg-[#EFF4FF] border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="text-[11px] font-bold text-[#0B2545] uppercase">
+                Pautan Rasmi Untuk Semua Orang Buka:
+              </div>
+              <a
+                href={PUBLIC_PORTAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-mono font-extrabold text-blue-700 hover:underline"
+              >
+                {PUBLIC_PORTAL_URL}
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleCopyPortalLink}
+                className="px-3 py-1.5 bg-[#001026] hover:bg-[#0B2545] text-white rounded text-xs font-bold cursor-pointer"
+              >
+                Salin URL
+              </button>
+              <a
+                href={PUBLIC_PORTAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-bold"
+              >
+                Buka Sekarang ↗
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-bold text-slate-700">
+                Kandungan Markdown (/README.md):
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(readmeSnippet);
+                  showToast('Kod Markdown README.md berjaya disalin!');
+                }}
+                className="text-xs font-bold text-blue-700 hover:underline cursor-pointer"
+              >
+                Salin Markdown README
+              </button>
+            </div>
+            <pre className="p-3 bg-slate-900 text-slate-100 rounded-[6px] text-[11px] font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-64">
+              {readmeSnippet}
+            </pre>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // If user is not signed in (first visit or after signing out), show the Auth Screen
   if (!currentUser) {
     return (
       <>
+        <PublicAccessBanner />
+        {showReadmeModal && <ReadmeGitHubModal />}
         {toastMessage && (
           <div className="fixed bottom-5 right-5 z-50 bg-[#001026] text-white px-4 py-3 rounded-[6px] shadow-xl border border-slate-700 text-xs font-semibold flex items-center gap-2.5 animate-slide-up">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -439,6 +597,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FF] flex flex-col font-['Plus_Jakarta_Sans',sans-serif] selection:bg-[#001026] selection:text-white">
+      {/* Top Always-Visible Public Link & GitHub README Bar */}
+      <PublicAccessBanner />
+      {showReadmeModal && <ReadmeGitHubModal />}
+
       {/* Global Toast */}
       {toastMessage && (
         <div className="fixed bottom-5 right-5 z-50 bg-[#001026] text-white px-4 py-3 rounded-[6px] shadow-xl border border-slate-700 text-xs font-semibold flex items-center gap-2.5 animate-slide-up">
