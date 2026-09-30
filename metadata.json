@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Stringer Claim Portal - Berita Harian",
+  "description": "Sistem Pengurusan Editorial \u0026 Tuntutan Stringer Berita Harian (NSTP Media Prima) lengkap dengan pengiraan elaun RM0.35/km, pengimbas resit AI, pengesahan tandatangan digital HOD, cetakan dwi-format memo kewangan, dan analitik pengurusan eksekutif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

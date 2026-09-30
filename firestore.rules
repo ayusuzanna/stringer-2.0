@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'ayusuzanna7k@gmail.com' ||
+        request.auth.token.email == 'ayusuzanna@mediaprima.com.my' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidClaim(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.stringerName is string && data.stringerName.size() <= 150 &&
+             data.biro is string && data.biro.size() <= 100 &&
+             data.month is string && data.month.size() <= 50 &&
+             data.status in ['Draf', 'Menunggu Kelulusan HOD', 'Disahkan HOD', 'Sedia Untuk Kewangan', 'Ditolak / Pembetulan'] &&
+             (!('totalKm' in data) || data.totalKm is number) &&
+             (!('grandTotalRm' in data) || data.grandTotalRm is number);
+    }
+
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() <= 128 &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 150)) &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 150));
+    }
+
+    // Test connection document for initial boot verification
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Claims Collection
+    match /claims/{claimId} {
+      allow read: if true;
+      allow create: if isAdmin() || (isValidId(claimId) && isValidClaim(incoming()));
+      allow update: if isAdmin() || (isValidId(claimId) && isValidClaim(incoming()));
+      allow delete: if isAdmin() || isValidId(claimId);
+    }
+
+    // User Profiles Collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isAdmin() || (isValidId(userId) && isValidUser(incoming()));
+      allow delete: if isAdmin() || isValidId(userId);
+    }
+
+    // System Links Collection (All links saved in Firebase)
+    match /links/{linkId} {
+      allow read: if true;
+      allow create, update: if isAdmin() || isValidId(linkId);
+      allow delete: if isAdmin() || isValidId(linkId);
+    }
+
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Default deny for all other documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "entities": {
+    "ClaimSubmission": {
+      "title": "ClaimSubmission",
+      "description": "Monthly stringer mileage and expense claim record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the claim submission"
+        },
+        "stringerId": {
+          "type": "string",
+          "description": "ID of the stringer submitting the claim"
+        },
+        "stringerName": {
+          "type": "string",
+          "description": "Full name of the stringer journalist"
+        },
+        "nric": {
+          "type": "string",
+          "description": "NRIC number of the stringer"
+        },
+        "biro": {
+          "type": "string",
+          "description": "Editorial bureau name"
+        },
+        "month": {
+          "type": "string",
+          "description": "Claim month title (e.g., Mac 2025)"
+        },
+        "monthKey": {
+          "type": "string",
+          "description": "Sorting key for the month (YYYY-MM)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the claim in the approval workflow",
+          "enum": [
+            "Draf",
+            "Menunggu Kelulusan HOD",
+            "Disahkan HOD",
+            "Sedia Untuk Kewangan",
+            "Ditolak / Pembetulan"
+          ]
+        },
+        "deadlineDate": {
+          "type": "string",
+          "description": "Deadline timestamp for submission"
+        },
+        "totalKm": {
+          "type": "number",
+          "description": "Total distance traveled in kilometers"
+        },
+        "totalMileageRm": {
+          "type": "number",
+          "description": "Total mileage allowance in RM (KM * 0.35)"
+        },
+        "totalTollRm": {
+          "type": "number",
+          "description": "Total toll expenses claimed in RM"
+        },
+        "totalParkingRm": {
+          "type": "number",
+          "description": "Total parking expenses claimed in RM"
+        },
+        "grandTotalRm": {
+          "type": "number",
+          "description": "Grand total claim amount in RM"
+        },
+        "trips": {
+          "type": "array",
+          "description": "List of editorial assignment trip logs"
+        },
+        "stringerSignature": {
+          "type": "string",
+          "description": "Digital signature data URL of the stringer"
+        },
+        "stringerSignedAt": {
+          "type": "string",
+          "description": "ISO timestamp when the stringer signed"
+        },
+        "stringerDeclarationAccepted": {
+          "type": "boolean",
+          "description": "Whether the SPRM Act 2009 integrity declaration was accepted"
+        },
+        "auditHash": {
+          "type": "string",
+          "description": "SHA-256 cryptographic integrity hash"
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "Client IP address for digital audit tracking"
+        },
+        "hodApproverName": {
+          "type": "string",
+          "description": "Name of the Head of Department who approved the claim"
+        },
+        "hodApproverId": {
+          "type": "string",
+          "description": "Staff ID of the approving HOD"
+        },
+        "hodSignature": {
+          "type": "string",
+          "description": "Digital signature data URL of the HOD"
+        },
+        "hodSignedAt": {
+          "type": "string",
+          "description": "Timestamp when the HOD approved"
+        },
+        "hodSeal": {
+          "type": "string",
+          "description": "HOD digital seal token"
+        },
+        "hodRemarks": {
+          "type": "string",
+          "description": "Remarks or revision notes from the HOD"
+        },
+        "hrReviewerName": {
+          "type": "string",
+          "description": "HR & Finance officer verifying the claim"
+        },
+        "hrReviewerId": {
+          "type": "string",
+          "description": "HR officer staff ID"
+        },
+        "hrReviewedAt": {
+          "type": "string",
+          "description": "Timestamp when HR verified the claim"
+        },
+        "voucherNo": {
+          "type": "string",
+          "description": "Finance payment voucher number"
+        },
+        "bankAccount": {
+          "type": "string",
+          "description": "Bank name and account number for EFT payout"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["id", "stringerName", "biro", "month", "status"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile, role, and banking information",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth user UID"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User full name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "nric": {
+          "type": "string",
+          "description": "NRIC number"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number"
+        },
+        "role": {
+          "type": "string",
+          "description": "Assigned portal role",
+          "enum": ["stringer", "hod", "hr", "admin"]
+        },
+        "allowedRoles": {
+          "type": "array",
+          "description": "List of roles this user has permission to log in and switch into"
+        },
+        "isSuperAdmin": {
+          "type": "boolean",
+          "description": "Whether the user has master permission across all roles"
+        },
+        "biro": {
+          "type": "string",
+          "description": "Assigned editorial bureau"
+        },
+        "bankAccount": {
+          "type": "string",
+          "description": "Bank account details for EFT"
+        },
+        "vehicleNo": {
+          "type": "string",
+          "description": "Registered vehicle registration number"
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "SystemLink": {
+      "title": "SystemLink",
+      "description": "Stored official links, reference documents, and portal resource URLs in Firebase",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the link"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title or display label of the link"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL destination"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category (Pekeliling, HR, Resit, Editorial, etc.)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the resource"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "User email or ID who added the link"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["id", "title", "url"]
+    }
+  },
+  "firestore": {
+    "/claims/{claimId}": {
+      "schema": "ClaimSubmission",
+      "description": "Collection of stringer monthly claims and approval records"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Collection of registered user profiles and settings"
+    },
+    "/links/{linkId}": {
+      "schema": "SystemLink",
+      "description": "Collection of official reference links and portal resources stored in Firebase"
+    }
+  }
+}
